@@ -1,0 +1,29 @@
+package dev.dewy.reborn.reaction.client;
+
+import com.github.steveice10.mc.protocol.packet.ingame.server.entity.spawn.ServerSpawnObjectPacket;
+import dev.dewy.reborn.client.REbornClient;
+import dev.dewy.reborn.reaction.IPacketReactor;
+import dev.dewy.reborn.util.entity.EntityObject;
+import dev.dewy.reborn.util.entity.EntityType;
+
+public class ServerSpawnObjectReaction implements IPacketReactor<ServerSpawnObjectPacket> {
+    @Override
+    public boolean takeAction(ServerSpawnObjectPacket packet) {
+        EntityObject e = new EntityObject();
+        e.type = EntityType.OBJECT;
+        e.entityId = packet.getEntityId();
+        e.uuid = packet.getUUID();
+        e.objectType = packet.getType();
+        e.posX = packet.getX();
+        e.posY = packet.getY();
+        e.posZ = packet.getZ();
+        e.pitch = packet.getPitch();
+        e.yaw = packet.getYaw();
+        e.motionX = packet.getMotionX();
+        e.motionY = packet.getMotionY();
+        e.motionZ = packet.getMotionZ();
+        e.data = packet.getData();
+        REbornClient.REbornClientCache.INSTANCE.entityCache.put(e.entityId, e);
+        return true;
+    }
+}

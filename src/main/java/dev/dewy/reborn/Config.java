@@ -35,9 +35,6 @@ public class Config {
     public String password = null;
 
     @ConfigSetting
-    public boolean cracked = false;
-
-    @ConfigSetting
     public String serverIp = "constantiam.net";
 
     @ConfigSetting

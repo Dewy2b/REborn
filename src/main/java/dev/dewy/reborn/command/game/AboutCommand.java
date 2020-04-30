@@ -2,11 +2,11 @@ package dev.dewy.reborn.command.game;
 
 import com.github.steveice10.mc.protocol.data.message.Message;
 import com.github.steveice10.mc.protocol.packet.ingame.server.ServerChatPacket;
+import com.sasha.simplecmdsys.SimpleCommand;
+import com.sasha.simplecmdsys.SimpleCommandInfo;
 import dev.dewy.reborn.REborn;
 import dev.dewy.reborn.api.REbornPluginLoader;
 import dev.dewy.reborn.util.TextMessageColoured;
-import com.sasha.simplecmdsys.SimpleCommand;
-import com.sasha.simplecmdsys.SimpleCommandInfo;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

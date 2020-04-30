@@ -1,8 +1,8 @@
 package dev.dewy.reborn.command.terminal;
 
+import com.sasha.simplecmdsys.SimpleCommand;
 import dev.dewy.reborn.REborn;
 import dev.dewy.reborn.api.REbornPluginLoader;
-import com.sasha.simplecmdsys.SimpleCommand;
 
 import java.io.IOException;
 

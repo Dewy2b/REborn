@@ -1,7 +1,7 @@
 package dev.dewy.reborn.command.terminal;
 
-import dev.dewy.reborn.REborn;
 import com.sasha.simplecmdsys.SimpleCommand;
+import dev.dewy.reborn.REborn;
 
 /**
  * Quit REborn

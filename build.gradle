@@ -7,16 +7,15 @@ buildscript {
     }
 }
 
-
 plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.2'
     id 'java'
 }
 
-
 def urlFile = { url, name ->
     File file = new File("$buildDir/download/${name}.jar")
     file.parentFile.mkdirs()
+
     if (!file.exists()) {
         new URL(url).withInputStream { downloadStream ->
             file.withOutputStream { fileOut ->
@@ -24,11 +23,12 @@ def urlFile = { url, name ->
             }
         }
     }
+
     files(file.absolutePath)
 }
 
-group 'com.sasha.reminecraft'
-version '1.0.3'
+group 'dev.dewy.reborn'
+version '3.0.0-dev'
 
 sourceCompatibility = 1.8
 
@@ -48,9 +48,8 @@ dependencies {
 build.dependsOn(shadowJar)
 
 shadowJar {
-    baseName = "$gradle.jarName-production-1.0.3"
-    classifier = null
-    version = null
+    classifier = "dist"
+
     dependencies {
         File cmd = new File("$buildDir/download/SimpleCommandSystem.jar")
         File ev = new File("$buildDir/download/SimpleEventSystem.jar")

@@ -28,7 +28,7 @@ def urlFile = { url, name ->
 }
 
 group 'dev.dewy.reborn'
-version '3.0.0-dev'
+version '3.0.0'
 
 sourceCompatibility = 1.8
 
@@ -63,6 +63,12 @@ shadowJar {
     dependencies {
         File cmd = new File("$buildDir/download/SimpleCommandSystem.jar")
         File ev = new File("$buildDir/download/SimpleEventSystem.jar")
+
         include(dependency(files(cmd, ev)))
+
+        include(dependency("com.github.Steveice10:MCProtocolLib"))
+
+        include(dependency("org.jline:jline:"))
+        include(dependency("org.yaml:snakeyaml"))
     }
 }

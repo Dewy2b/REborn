@@ -23,10 +23,8 @@ import com.sasha.reminecraft.command.terminal.ExitCommand;
 import com.sasha.reminecraft.command.terminal.LoginCommand;
 import com.sasha.reminecraft.command.terminal.RelaunchCommand;
 import com.sasha.reminecraft.command.terminal.ReloadCommand;
-import com.sasha.reminecraft.javafx.ReMinecraftGui;
 import com.sasha.reminecraft.logging.ILogger;
-import com.sasha.reminecraft.logging.impl.JavaFXLogger;
-import com.sasha.reminecraft.logging.impl.TerminalLogger;
+import com.sasha.reminecraft.logging.Logger;
 import com.sasha.reminecraft.util.AwaitThread;
 import com.sasha.reminecraft.util.PingStatus;
 import com.sasha.reminecraft.util.ServerPinger;
@@ -46,8 +44,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-
-import static com.sasha.reminecraft.javafx.ReMinecraftGui.launched;
 
 /**
  * The main Re:Minecraft class, where the majority of essential startup functions will be stored.
@@ -71,11 +67,6 @@ public class ReMinecraft implements IReMinecraft {
      * Singleton of this Re:Minecraft
      */
     public static ReMinecraft INSTANCE;
-
-    /**
-     * Whether the current instance of reminecraft is using the JavaFX gui or not
-     */
-    public static boolean isUsingJavaFXGui = true;
     /**
      * The JLine terminal instance
      */
@@ -113,37 +104,20 @@ public class ReMinecraft implements IReMinecraft {
      */
     public static void main(String[] args) throws IOException {
         ReMinecraft.args = args;
-        isUsingJavaFXGui = true;
-        if (args.length != 0) {
-            if (args[0].toLowerCase().replace("-", "").equals("nogui")) {
-                isUsingJavaFXGui = false;
-            }
-        }
-        if (!isUsingJavaFXGui) {
-            terminal = TerminalBuilder.builder().name("RE:Minecraft").system(true).build();
-            reader = LineReaderBuilder.builder().terminal(terminal).build();
-            LOGGER = new TerminalLogger("RE:Minecraft " + VERSION);
-        } else {
-            LOGGER = new JavaFXLogger("RE:Minecraft " + VERSION);
-            if (!launched) new Thread(() -> {
-                try {
-                    new ReMinecraftGui().startLaunch();
-                } catch (Exception e) {
-                    System.out.println("!!! Couldn't start JavaFX GUI. Please run with the -nogui flag !!!");
-                    System.exit(69);
-                }
-            }).start();
-        }
+        terminal = TerminalBuilder.builder().name("RE:Minecraft").system(true).build();
+        reader = LineReaderBuilder.builder().terminal(terminal).build();
+        LOGGER = new Logger("RE:Minecraft " + VERSION);
         Runtime.getRuntime().addShutdownHook(shutdownThread);
         loader = new RePluginLoader();
         loader.preparePlugins(loader.findPlugins());
         loader.loadPlugins();
         Thread thread = new Thread(() -> {
             new ReMinecraft().start(args, false);
-        }); // start Re:Minecraft before handling console commands
-        if (!isUsingJavaFXGui) thread.run();
-        else thread.start();
-        while (!isUsingJavaFXGui) {
+        });
+
+        thread.start();
+
+        while (true) {
             try {
                 String cmd = reader.readLine(null, null, "> ");
                 TERMINAL_CMD_PROCESSOR.processCommand(cmd.trim().replace("> ", ""));

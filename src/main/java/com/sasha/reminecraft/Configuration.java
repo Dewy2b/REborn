@@ -1,10 +1,10 @@
 package com.sasha.reminecraft;
 
 import com.sasha.reminecraft.api.exception.ReMinecraftPluginConfigurationException;
-import com.sasha.reminecraft.util.ReUtil;
 import com.sasha.reminecraft.util.YML;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -78,7 +78,7 @@ public class Configuration {
      */
     protected final void configure() {
         try {
-            File file = ReUtil.getDataFile(configName);
+            File file = getDataFile(configName);
             YML yml = new YML(file);
             for (Field declaredField : this.getClass().getDeclaredFields()) {
                 if (declaredField.getAnnotation(ConfigSetting.class) == null) continue;
@@ -110,7 +110,7 @@ public class Configuration {
 
     protected final void save() {
         try {
-            File file = ReUtil.getDataFile(configName);
+            File file = getDataFile(configName);
             YML yml = new YML(file);
             for (Field declaredField : this.getClass().getDeclaredFields()) {
                 if (declaredField.getAnnotation(ConfigSetting.class) == null) continue;
@@ -144,5 +144,17 @@ public class Configuration {
     @Target(ElementType.FIELD)
     public @interface Removed {
 
+    }
+
+    public static File getDataFile(String s) {
+        File file = new File(s + ".yml");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return file;
     }
 }

@@ -1,9 +1,7 @@
 package com.sasha.reminecraft.api;
 
-import com.sasha.reminecraft.ReMinecraft;
 import com.sasha.reminecraft.logging.ILogger;
-import com.sasha.reminecraft.logging.impl.JavaFXLogger;
-import com.sasha.reminecraft.logging.impl.TerminalLogger;
+import com.sasha.reminecraft.logging.Logger;
 import com.sasha.reminecraft.util.YML;
 
 import java.io.*;
@@ -24,8 +22,7 @@ public class RePluginLoader {
     private static final List<RePlugin> pluginList = new ArrayList<>();
 
     public RePluginLoader() {
-        if (!ReMinecraft.isUsingJavaFXGui) LOGGER = new TerminalLogger("Plugin Loader");
-        else LOGGER = new JavaFXLogger("Plugin Loader");
+        LOGGER = new Logger("Plugin Loader");
     }
 
     public List<File> findPlugins() {

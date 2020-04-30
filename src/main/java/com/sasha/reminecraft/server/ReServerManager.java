@@ -57,9 +57,9 @@ public class ReServerManager extends ServerAdapter {
      * @return the built server
      */
     public static Server prepareServer() {
-        Server server = new Server(ReMinecraft.INSTANCE.MAIN_CONFIG.var_hostServerIp, ReMinecraft.INSTANCE.MAIN_CONFIG.var_hostServerPort, MinecraftProtocol.class, new TcpSessionFactory());
+        Server server = new Server(ReMinecraft.INSTANCE.MAIN_CONFIG.rebornServerIp, ReMinecraft.INSTANCE.MAIN_CONFIG.rebornServerPort, MinecraftProtocol.class, new TcpSessionFactory());
         server.setGlobalFlag(MinecraftConstants.AUTH_PROXY_KEY, Proxy.NO_PROXY);
-        server.setGlobalFlag(MinecraftConstants.VERIFY_USERS_KEY, ReMinecraft.INSTANCE.MAIN_CONFIG.var_onlineModeServer);
+        server.setGlobalFlag(MinecraftConstants.VERIFY_USERS_KEY, ReMinecraft.INSTANCE.MAIN_CONFIG.onlineMode);
         server.setGlobalFlag
                 (MinecraftConstants.SERVER_INFO_BUILDER_KEY, new ServerInfoBuilder() {
                     @Override
@@ -67,7 +67,7 @@ public class ReServerManager extends ServerAdapter {
                         return new ServerStatusInfo(
                                 new VersionInfo(MinecraftConstants.GAME_VERSION, MinecraftConstants.PROTOCOL_VERSION),
                                 new PlayerInfo(420, (int) ReMinecraft.INSTANCE.childClients.stream().filter(e -> ((MinecraftProtocol) e.getSession().getPacketProtocol()).getSubProtocol() != SubProtocol.STATUS).count(), new GameProfile[]{}),
-                                TextMessageColoured.from(ReMinecraft.INSTANCE.MAIN_CONFIG.var_messageOfTheDay),
+                                TextMessageColoured.from(ReMinecraft.INSTANCE.MAIN_CONFIG.motd),
                                 null);
                     }
                 });

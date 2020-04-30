@@ -161,17 +161,17 @@ public class ReMinecraft implements IReMinecraft {
             configurations.forEach(Configuration::configure); // set config vars
             if (!restart) RePluginLoader.initPlugins();
             Proxy proxy = Proxy.NO_PROXY;
-            if (MAIN_CONFIG.var_socksProxy != null && !MAIN_CONFIG.var_socksProxy.equalsIgnoreCase("[no default]") && MAIN_CONFIG.var_socksPort != -1) {
-                proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress(InetAddress.getByName(MAIN_CONFIG.var_socksProxy), MAIN_CONFIG.var_socksPort));
+            if (MAIN_CONFIG.socksProxy != null && !MAIN_CONFIG.socksProxy.equalsIgnoreCase("[no default]") && MAIN_CONFIG.socksPort != -1) {
+                proxy = new Proxy(Proxy.Type.SOCKS, new InetSocketAddress(InetAddress.getByName(MAIN_CONFIG.socksProxy), MAIN_CONFIG.socksPort));
             }
             if (!canPing()) {
                 this.reLaunch();
                 return;
             }
-            AuthenticationService service = authenticate(MAIN_CONFIG.var_authWithoutProxy ? Proxy.NO_PROXY : proxy);// log into mc
+            AuthenticationService service = authenticate(MAIN_CONFIG.authNoProxy ? Proxy.NO_PROXY : proxy);// log into mc
             if (service != null) {
-                minecraftClient = new Client(MAIN_CONFIG.var_remoteServerIp,
-                        MAIN_CONFIG.var_remoteServerPort,
+                minecraftClient = new Client(MAIN_CONFIG.serverIp,
+                        MAIN_CONFIG.serverPort,
                         protocol,
                         new TcpSessionFactory(proxy));
                 minecraftClient.getSession().addListener(new ReClient());
@@ -191,14 +191,14 @@ public class ReMinecraft implements IReMinecraft {
         EVENT_BUS.invokeEvent(event);
         // if the event is cancelled, skip pinging the server.
         if (!event.isCancelled()) {
-            ServerPinger pinger = new ServerPinger(MAIN_CONFIG.var_remoteServerIp, MAIN_CONFIG.var_remoteServerPort);
+            ServerPinger pinger = new ServerPinger(MAIN_CONFIG.serverIp, MAIN_CONFIG.serverPort);
             pinger.status(LOGGER);
             int time = 0;
             while (pinger.pinged == PingStatus.PINGING) {
                 try {
                     Thread.sleep(1000L);
                     time++;
-                    if (MAIN_CONFIG.var_pingTimeoutSeconds > 0 && time > MAIN_CONFIG.var_pingTimeoutSeconds) {
+                    if (MAIN_CONFIG.pingTimeout > 0 && time > MAIN_CONFIG.pingTimeout) {
                         pinger.pinged = PingStatus.PINGED;
                         LOGGER.logWarning("Ping timeout. Trying to connect anyways.");
                         break;
@@ -222,7 +222,7 @@ public class ReMinecraft implements IReMinecraft {
      */
     @Override
     public AuthenticationService authenticate(Proxy proxy) {
-        if (!MAIN_CONFIG.var_sessionId.equalsIgnoreCase("[no default]")) {
+        if (!MAIN_CONFIG.sessionId.equalsIgnoreCase("[no default]")) {
             try {
                 MojangAuthenticateEvent.Pre event = new MojangAuthenticateEvent.Pre(MojangAuthenticateEvent.Method.SESSIONID);
                 this.EVENT_BUS.invokeEvent(event);
@@ -231,11 +231,11 @@ public class ReMinecraft implements IReMinecraft {
                 }
                 // try authing with session id first, since it [appears] to be present
                 ReMinecraft.LOGGER.log("Attempting to log in with session token");
-                AuthenticationService authServ = new AuthenticationService(MAIN_CONFIG.var_clientId, proxy);
-                authServ.setUsername(MAIN_CONFIG.var_mojangEmail);
-                authServ.setAccessToken(MAIN_CONFIG.var_sessionId);
+                AuthenticationService authServ = new AuthenticationService(MAIN_CONFIG.clientId, proxy);
+                authServ.setUsername(MAIN_CONFIG.email);
+                authServ.setAccessToken(MAIN_CONFIG.sessionId);
                 authServ.login();
-                protocol = new MinecraftProtocol(authServ.getSelectedProfile(), MAIN_CONFIG.var_clientId, authServ.getAccessToken());
+                protocol = new MinecraftProtocol(authServ.getSelectedProfile(), MAIN_CONFIG.clientId, authServ.getAccessToken());
                 updateToken(authServ.getAccessToken());
                 MojangAuthenticateEvent.Post postEvent = new MojangAuthenticateEvent.Post(MojangAuthenticateEvent.Method.SESSIONID, true);
                 this.EVENT_BUS.invokeEvent(postEvent);
@@ -256,11 +256,11 @@ public class ReMinecraft implements IReMinecraft {
             MojangAuthenticateEvent.Pre event = new MojangAuthenticateEvent.Pre(MojangAuthenticateEvent.Method.EMAILPASS);
             this.EVENT_BUS.invokeEvent(event);
             if (event.isCancelled()) return null;
-            AuthenticationService authServ = new AuthenticationService(MAIN_CONFIG.var_clientId, proxy);
-            authServ.setUsername(MAIN_CONFIG.var_mojangEmail);
-            authServ.setPassword(MAIN_CONFIG.var_mojangPassword);
+            AuthenticationService authServ = new AuthenticationService(MAIN_CONFIG.clientId, proxy);
+            authServ.setUsername(MAIN_CONFIG.email);
+            authServ.setPassword(MAIN_CONFIG.password);
             authServ.login();
-            protocol = new MinecraftProtocol(authServ.getSelectedProfile(), MAIN_CONFIG.var_clientId, authServ.getAccessToken());
+            protocol = new MinecraftProtocol(authServ.getSelectedProfile(), MAIN_CONFIG.clientId, authServ.getAccessToken());
             updateToken(authServ.getAccessToken());
             ReMinecraft.LOGGER.log("Logged in as " + authServ.getSelectedProfile().getName());
             ReClient.ReClientCache.INSTANCE.playerName = authServ.getSelectedProfile().getName();
@@ -287,7 +287,7 @@ public class ReMinecraft implements IReMinecraft {
      */
     @Override
     public void updateToken(String token) {
-        MAIN_CONFIG.var_sessionId = token;
+        MAIN_CONFIG.sessionId = token;
     }
 
     @Override
@@ -389,7 +389,7 @@ public class ReMinecraft implements IReMinecraft {
         AwaitThread thread = new AwaitThread(latch) {
             @Override
             public void run() {
-                for (i[0] = MAIN_CONFIG.var_reconnectDelaySeconds; i[0] >= 0; i[0]--) {
+                for (i[0] = MAIN_CONFIG.reconnectDelay; i[0] >= 0; i[0]--) {
                     ReMinecraft.LOGGER.logWarning("Reconnecting in " + i[0] + " seconds");
                     try {
                         Thread.sleep(1000L);

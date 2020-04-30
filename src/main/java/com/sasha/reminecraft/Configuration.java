@@ -17,56 +17,70 @@ import java.util.UUID;
  * Holds all of the configuration values
  */
 public class Configuration {
-
     private String configName;
 
     /**
      * The global configuration vars
-     * Format:
-     * #@ConfigSetting public [Type] var_[name] = [defualt value]
      */
     @ConfigSetting
-    public String var_sessionId = null;
+    public String sessionId = null;
+
     @ConfigSetting
-    public String var_clientId = UUID.randomUUID().toString();
+    public String clientId = UUID.randomUUID().toString();
+
     @ConfigSetting
-    public String var_mojangEmail = null;
+    public String email = null;
+
     @ConfigSetting
-    public String var_mojangPassword = null;
+    public String password = null;
+
     @ConfigSetting
-    public boolean var_cracked = false;
+    public boolean cracked = false;
+
     @ConfigSetting
-    public String var_remoteServerIp = "constantiam.net";
+    public String serverIp = "constantiam.net";
+
     @ConfigSetting
-    public String var_hostServerIp = "0.0.0.0";
+    public String rebornServerIp = "0.0.0.0";
+
     @ConfigSetting
-    public int var_remoteServerPort = 25565;
+    public int serverPort = 25565;
+
     @ConfigSetting
-    public int var_hostServerPort = 25565;
+    public int rebornServerPort = 25565;
+
     @ConfigSetting
-    public boolean var_onlineModeServer = true;
+    public boolean onlineMode = true;
+
     @ConfigSetting
-    public int var_pingTimeoutSeconds = 30;
+    public int pingTimeout = 30;
+
     @ConfigSetting
-    public boolean var_useWhitelist = false;
+    public boolean useWhitelist = false;
+
     @ConfigSetting
-    public ArrayList<String> var_whitelistServer = new ArrayList<>();
+    public ArrayList<String> whitelist = new ArrayList<>();
+
     @ConfigSetting
-    public String var_messageOfTheDay = "&dRE:Minecraft &7" + ReMinecraft.VERSION;
+    public String motd = "&dRE:Minecraft &7" + ReMinecraft.VERSION;
+
     @ConfigSetting
-    public int var_reconnectDelaySeconds = 5;
+    public int reconnectDelay = 5;
+
     @ConfigSetting
-    public boolean var_authWithoutProxy = true;
+    public boolean authNoProxy = true;
+
     @ConfigSetting
-    public String var_socksProxy = null;
+    public String socksProxy = null;
+
     @ConfigSetting
-    public int var_socksPort = -1;
+    public int socksPort = -1;
 
     {
-        var_whitelistServer.add("SomeUsername");
-        var_whitelistServer.add("AnotherWeirdMinecraftName");
-        var_whitelistServer.add("1248_test_user");
-        var_whitelistServer.add("uwu");
+        whitelist.add("iBuyMountainDew");
+        whitelist.add("shumbo");
+        whitelist.add("yandev");
+        whitelist.add("nouwuwshereugh");
     }
 
     public Configuration(String configName) {
@@ -86,7 +100,7 @@ public class Configuration {
                 if (!yml.exists("config-version")) {
                     yml.set("config-version", 0);
                 }
-                String target = declaredField.getName().replace("var_", "");
+                String target = declaredField.getName();
                 if (!yml.exists(target)) {
                     yml.set(target, declaredField.get(this) == null ? "[no default]" : declaredField.get(this));
                     declaredField.set(this, declaredField.get(this) == null ? "[no default]" : declaredField.get(this));
@@ -118,7 +132,7 @@ public class Configuration {
                 if (!yml.exists("config-version")) {
                     yml.set("config-version", 0);
                 }
-                String target = declaredField.getName().replace("var_", "");
+                String target = declaredField.getName();
                 yml.set(target, declaredField.get(this));
                 ReMinecraft.LOGGER.logDebug("Saved " + target);
             }

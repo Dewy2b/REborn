@@ -11,8 +11,8 @@ public class ServerUpdateTimeReaction implements IPacketReactor<ServerUpdateTime
     public boolean takeAction(ServerUpdateTimePacket packet) {
         if (!ReClient.ReClientCache.INSTANCE.serverTicked) {
             ReClient.ReClientCache.INSTANCE.serverTicked = true;
-            ReMinecraft.LOGGER.log("Starting server on " + ReMinecraft.INSTANCE.MAIN_CONFIG.var_hostServerIp + ":" +
-                    ReMinecraft.INSTANCE.MAIN_CONFIG.var_hostServerPort);
+            ReMinecraft.LOGGER.log("Starting server on " + ReMinecraft.INSTANCE.MAIN_CONFIG.rebornServerIp + ":" +
+                    ReMinecraft.INSTANCE.MAIN_CONFIG.rebornServerPort);
             try {
                 ReMinecraft.INSTANCE.minecraftServer = ReServerManager.prepareServer();
                 ReMinecraft.INSTANCE.minecraftServer.addListener(new ReServerManager());

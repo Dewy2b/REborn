@@ -300,7 +300,7 @@ public class ReServer extends SessionAdapter {
     }
 
     public static void runWhitelist(String name, ChildReClient child) {
-        boolean flag = ReMinecraft.INSTANCE.MAIN_CONFIG.var_useWhitelist && !ReMinecraft.INSTANCE.MAIN_CONFIG.var_whitelistServer
+        boolean flag = ReMinecraft.INSTANCE.MAIN_CONFIG.useWhitelist && !ReMinecraft.INSTANCE.MAIN_CONFIG.whitelist
                 .stream()
                 .map(String::toLowerCase)
                 .collect(Collectors.toList())

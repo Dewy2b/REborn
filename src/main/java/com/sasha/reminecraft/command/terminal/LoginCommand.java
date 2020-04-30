@@ -19,8 +19,8 @@ public class LoginCommand extends SimpleCommand {
         }
         String email = this.getArguments()[0];
         String pass = this.getArguments()[1];
-        ReMinecraft.INSTANCE.MAIN_CONFIG.var_mojangEmail = email;
-        ReMinecraft.INSTANCE.MAIN_CONFIG.var_mojangEmail = pass;
+        ReMinecraft.INSTANCE.MAIN_CONFIG.email = email;
+        ReMinecraft.INSTANCE.MAIN_CONFIG.email = pass;
         ReMinecraft.LOGGER.log("Credentials updated! Please type \"relaunch\" to try logging in again.");
     }
 }

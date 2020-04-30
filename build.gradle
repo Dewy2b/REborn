@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.2'
+    }
+}
+
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '4.0.2'
+    id 'java'
+}
+
+
+def urlFile = { url, name ->
+    File file = new File("$buildDir/download/${name}.jar")
+    file.parentFile.mkdirs()
+    if (!file.exists()) {
+        new URL(url).withInputStream { downloadStream ->
+            file.withOutputStream { fileOut ->
+                fileOut << downloadStream
+            }
+        }
+    }
+    files(file.absolutePath)
+}
+
+group 'com.sasha.reminecraft'
+version '1.0.3'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.Steveice10:MCProtocolLib:4b29ec1'
+    implementation files(urlFile("https://github.com/EmotionalLove/SimpleEventSystem/releases/download/1.2.1/SimpleEventSystem.jar", "SimpleEventSystem"))
+    implementation files(urlFile("https://github.com/EmotionalLove/SimpleCommandSystem/releases/download/1.0.2/SimpleCommandSystem.jar", "SimpleCommandSystem"))
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.23'
+    implementation 'org.jline:jline:3.9.0'
+}
+
+build.dependsOn(shadowJar)
+
+shadowJar {
+    baseName = "$gradle.jarName-production-1.0.3"
+    classifier = null
+    version = null
+    dependencies {
+        File cmd = new File("$buildDir/download/SimpleCommandSystem.jar")
+        File ev = new File("$buildDir/download/SimpleEventSystem.jar")
+        include(dependency(files(cmd, ev)))
+    }
+}

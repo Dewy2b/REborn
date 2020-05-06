@@ -54,7 +54,7 @@ public class REborn implements IREborn {
     /**
      * Current software version of REborn
      */
-    public static String VERSION = "2.0.8_1";
+    public static String VERSION = "3.0.1";
     /**
      * The command line command processor
      */

@@ -28,7 +28,7 @@ def urlFile = { url, name ->
 }
 
 group 'dev.dewy.reborn'
-version '3.0.0'
+version '3.0.1'
 
 sourceCompatibility = 1.8
 
@@ -67,8 +67,12 @@ shadowJar {
         include(dependency(files(cmd, ev)))
 
         include(dependency("com.github.Steveice10:MCProtocolLib"))
+        include(dependency("com.github.steveice10:opennbt"))
+        include(dependency("com.github.steveice10:packetlib"))
+        include(dependency("com.github.steveice10:mcauthlib"))
 
         include(dependency("org.jline:jline:"))
         include(dependency("org.yaml:snakeyaml"))
+        include(dependency("io.netty:netty-all"))
     }
 }
